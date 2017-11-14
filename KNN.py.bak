@@ -13,6 +13,10 @@ def createDataSet():
     labels = ['爱情片','爱情片','动作片','动作片']
     return group,labels
 
+if __name__ == '__main__':
+    group,labels = createDataSet()
+    print(group)
+    print(labels)
 
 #########################
 import numpy as np
