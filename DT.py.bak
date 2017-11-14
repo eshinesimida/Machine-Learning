@@ -45,7 +45,14 @@ def calcShannonEnt(dataSet):
         shannonEnt -= prob * log(prob, 2)
     return shannonEnt
 
+if __name__ == '__main__':
+    dataSet, features = createDataSet()
+    print(dataSet)
+    print(calcShannonEnt(dataSet))
+    
+########information gain
 
+from math import log
 
 def splitDataSet(dataSet, axis, value):
     retDataSet = []
@@ -76,7 +83,9 @@ def chooseBestFeatureToSplit(dataSet):
             bestFeature = i
     return bestFeature
     
-
+if __name__ == '__main__':
+    dataSet, features = createDataSet()
+    print('最优特征索引值:' + str(chooseBestFeatureToSplit(dataSet)))
     
 
 def majorityCnt(classList):
