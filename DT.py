@@ -39,14 +39,6 @@ def calcShannonEnt(dataSet):
         shannonEnt -= prob * log(prob, 2)
     return shannonEnt
 
-if __name__ == '__main__':
-    dataSet, features = createDataSet()
-    print(dataSet)
-    print(calcShannonEnt(dataSet))
-    
-########information gain
-
-from math import log
 
 def splitDataSet(dataSet, axis, value):
     retDataSet = []
@@ -77,9 +69,7 @@ def chooseBestFeatureToSplit(dataSet):
             bestFeature = i
     return bestFeature
     
-if __name__ == '__main__':
-    dataSet, features = createDataSet()
-    print('最优特征索引值:' + str(chooseBestFeatureToSplit(dataSet)))
+
     
 
 def majorityCnt(classList):
@@ -126,21 +116,7 @@ def classify(inputTree, featLabels, testVec):
                 classLabel = secondDict[key]
     return classLabel
         
-if __name__ == '__main__':
-    dataSet,labels = createDataSet()
-    featLabels = []
-    myTree = createTree(dataSet, labels, featLabels)
-    print(myTree)
-    
-    testVec = [0,1]                                        #测试数据
-    result = classify(myTree, featLabels, testVec)
-    if result == 'yes':
-        print('放贷')
-    if result == 'no':
-        print('不放贷')   
-        
-        
-#########################################
+
 import pickle
 
 def storeTree(inputTree, filename):
