@@ -72,11 +72,14 @@ def gradAscent(dataMatIn, classLabels):
     alpha = 0.001
     maxCycles = 500
     weights = np.ones((n, 1))
+    weights_array = np.array([])
     for k in range(maxCycles):
         h = sigmoid(dataMatrix * weights)
         error = labelMat - h
         weights = weights + alpha * dataMatrix.transpose() * error
-    return weights.getA()
+        weights_array = np.append(weights_array, weights)
+    weights_array = weights_array.reshape(maxCycles, n)
+    return weights.getA(), weights_array
     
 if __name__ == '__main__':
     dataMat, labelMat = loadDataSet()
@@ -110,5 +113,75 @@ if __name__ == '__main__':
     dataMat, labelMat = loadDataSet()           
     weights = gradAscent(dataMat, labelMat)
     plotBestFit(weights)
+
+############################
+def stocGradAscent1(dataMatrix, classLabels, numIter = 150):
+    m,n = np.shape(dataMatrix)
+    weights = np.ones(n)
+    weights_array = np.array([])
+    for j in range(numIter):
+        dataIndex = list(range(m))
+        for i in range(m):
+            alpha = 4/(1.0 + j + i) + 0.01
+            randIndex = int(random.uniform(0, len(dataIndex)))
+            h = sigmoid(sum(dataMatrix[randIndex]*weights))
+            error = classLabels[randIndex] - h
+            weights = weights + alpha *error*dataMatrix[randIndex]
+            weights_array = np.append(weights_array, weights, axis = 0)
+            del(dataIndex[randIndex])
+    weights_array = weights_array.reshape(numIter*m, n)
+    return weights, weights_array
+
+if __name__ == '__main__':
+    dataMat, labelMat = loadDataSet()
+    weights = stocGradAscent1(np.array(dataMat), labelMat)
+    plotBestFit(weights)
+            
+def plotWeights(weights_array1,weights_array2):
+    font = FontProperties(fname=r'c:\windows\fonts\simsun.ttc', size = 14)
+    fig, axs = plt.subplots(nrows = 3, ncols = 2, sharex = False, sharey = False, figsize = (20, 10))
+    x1 = np.arange(0, len(weights_array1), 1)
+    axs[0][0].plot(x1, weights_array1[:,0])
+    axs0_title_text = axs[0][0].set_title(u'梯度上升算法：回归系数与迭代次数关系', FontProperties = font)
+    axs0_ylabel_text = axs[0][0].set_ylabel(u'W0', FontProperties = font)
+    plt.setp(axs0_title_text, size = 20, weight = 'bold', color = 'black')
+    plt.setp(axs0_ylabel_text, size = 20, weight = 'bold', color = 'black')
+     #绘制w1与迭代次数的关系
+    axs[1][0].plot(x1,weights_array1[:,1])
+    axs1_ylabel_text = axs[1][0].set_ylabel(u'W1',FontProperties=font)
+    plt.setp(axs1_ylabel_text, size=20, weight='bold', color='black')
+     #绘制w2与迭代次数的关系
+    axs[2][0].plot(x1,weights_array1[:,2])
+    axs2_xlabel_text = axs[2][0].set_xlabel(u'迭代次数',FontProperties=font)
+    axs2_ylabel_text = axs[2][0].set_ylabel(u'W1',FontProperties=font)
+    plt.setp(axs2_xlabel_text, size=20, weight='bold', color='black') 
+    plt.setp(axs2_ylabel_text, size=20, weight='bold', color='black')
+    x2 = np.arange(0, len(weights_array2), 1)
+    #绘制w0与迭代次数的关系
+    axs[0][1].plot(x2,weights_array2[:,0])
+    axs0_title_text = axs[0][1].set_title(u'改进的随机梯度上升算法：回归系数与迭代次数关系',FontProperties=font)
+    axs0_ylabel_text = axs[0][1].set_ylabel(u'W0',FontProperties=font)
+    plt.setp(axs0_title_text, size=20, weight='bold', color='black') 
+    plt.setp(axs0_ylabel_text, size=20, weight='bold', color='black')
+    #绘制w1与迭代次数的关系
+    axs[1][1].plot(x2,weights_array2[:,1])
+    axs1_ylabel_text = axs[1][1].set_ylabel(u'W1',FontProperties=font)
+    plt.setp(axs1_ylabel_text, size=20, weight='bold', color='black')
+    #绘制w2与迭代次数的关系
+    axs[2][1].plot(x2,weights_array2[:,2])
+    axs2_xlabel_text = axs[2][1].set_xlabel(u'迭代次数',FontProperties=font)
+    axs2_ylabel_text = axs[2][1].set_ylabel(u'W1',FontProperties=font)
+    plt.setp(axs2_xlabel_text, size=20, weight='bold', color='black') 
+    plt.setp(axs2_ylabel_text, size=20, weight='bold', color='black')
     
+    plt.savefig('logical', dpi= 600)
+
+    plt.show()       
+    
+if __name__ == '__main__':
+    dataMat, labelMat = loadDataSet()           
+    weights1,weights_array1 = stocGradAscent1(np.array(dataMat), labelMat)
+
+    weights2,weights_array2 = gradAscent(dataMat, labelMat)
+    plotWeights(weights_array1, weights_array2)
     
