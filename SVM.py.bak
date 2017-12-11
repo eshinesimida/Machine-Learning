@@ -4,7 +4,6 @@ Created on Wed Nov 22 21:40:17 2017
 
 @author: dell
 """
-#svm推导公式
 
 import matplotlib.pyplot as plt
 import numpy as np
